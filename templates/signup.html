@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:400,700">
+<title>Signup</title>
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+<script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"></script> 
+<style>
+body {
+	color: #fff;
+	background: #3598dc;
+	font-family: 'Roboto', sans-serif;
+}
+.form-control {
+	height: 41px;
+	background: #f2f2f2;
+	box-shadow: none !important;
+	border: none;
+}
+.form-control:focus {
+	background: #e2e2e2;
+}
+.form-control, .btn {        
+	border-radius: 3px;
+}
+.signup-form {
+	width: 400px;
+	margin: 30px auto;
+}
+.signup-form form {
+	color: #999;
+	border-radius: 3px;
+	margin-bottom: 15px;
+	background: #fff;
+	box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.3);
+	padding: 30px;
+}
+.signup-form h2  {
+	color: #333;
+	font-weight: bold;
+	margin-top: 0;
+}
+.signup-form hr  {
+	margin: 0 -30px 20px;
+}    
+.signup-form .form-group {
+	margin-bottom: 20px;
+}
+.signup-form input[type="checkbox"] {
+	margin-top: 3px;
+}
+.signup-form .row div:first-child {
+	padding-right: 10px;
+}
+.signup-form .row div:last-child {
+	padding-left: 10px;
+}
+.signup-form .btn {        
+	font-size: 16px;
+	font-weight: bold;
+	background: #3598dc;
+	border: none;
+	min-width: 140px;
+}
+.signup-form .btn:hover, .signup-form .btn:focus {
+	background: #2389cd !important;
+	outline: none;
+}
+.signup-form a {
+	color: #fff;
+	text-decoration: underline;
+}
+.signup-form a:hover {
+	text-decoration: none;
+}
+.signup-form form a {
+	color: #3598dc;
+	text-decoration: none;
+}	
+.signup-form form a:hover {
+	text-decoration: underline;
+}
+.signup-form .hint-text  {
+	padding-bottom: 15px;
+	text-align: center;
+}
+</style>
+</head>
+<body>
+<div class="signup-form">
+    <form action="" method="post">
+      {% csrf_token %}
+		<h2>Sign Up</h2>
+		<p>Please fill in this form to create an account!</p>
+		<hr>
+        <div class="form-group">
+        
+			<div class="row">
+        
+				<div class="col"><input type="text" id="inputName" class="form-control" name="first_name" placeholder="First Name" onblur="validateName()" required="required" oninvalid="setCustomValidity(' ')" onchange="setCustomValidity('')"></div>
+        
+				<div class="col"><input type="text" id="inputName" class="form-control" name="last_name" placeholder="Last Name"    oninvalid="setCustomValidity(' ')" onchange="setCustomValidity('')"></div>
+			</div>    
+      <span class='error-message' id='name-error' style="font-size:small"></span>    	
+        </div>
+        <div class="form-group">
+          <div><input type="text" id="username" class="form-control" name="username" onblur="validateUsername()" placeholder="Username" required="required" oninvalid="setCustomValidity(' ')" onchange="setCustomValidity('')"></div>
+          <span class='error-message' id='user-error' style="font-size:small"></span></div>
+        <div class="form-group">
+        	<input type="email" id="inputEmail" class="form-control" name="email" placeholder="Email" onblur="validateEmail()" required="required" oninvalid="setCustomValidity(' ')" onchange="setCustomValidity('')">
+          <span class='error-message' id='email-error' style="font-size:small"></span>
+        </div>
+		<div class="form-group">
+            <input type="password" id="password1" class="form-control" onblur="validatePassword()" minlength="8" oninvalid="setCustomValidity(' ')" onchange="setCustomValidity('')"  name="password1" placeholder="Password" required="required">
+            <span class='error-message' id='password-error' style="font-size:small"></span>
+        </div>
+		<div class="form-group">
+            <input type="password" id="password2" class="form-control" name="password2" onblur="passwordVerify()"  placeholder="Confirm Password" required="required" oninvalid="setCustomValidity(' ')" onchange="setCustomValidity('')">
+            <span class='error-message' id='verify-error' style="font-size:small"></span>
+        </div>        
+        <div class="form-group">
+			<label class="form-check-label"><input type="checkbox" required="required"> I accept the <a href="#">Terms of Use</a> &amp; <a href="#">Privacy Policy</a></label>
+		</div>
+		<div class="form-group">
+            <button type="submit" onsubmit="validateForm()" class="btn btn-primary btn-lg">Sign Up</button>
+            <!-- <span class='error-message' id='submit-error' style="font-size:small"></span> -->
+        </div>
+    </form>
+    {% for message in messages%}
+						<p style="color: red;">{{message}}</p>
+						{% endfor %}
+            
+	<div class="hint-text">Already have an account? <a href="{% url 'login' %}">Login here</a></div>
+</div>
+
+
+
+<script>
+  function validateEmail () {
+  
+    var email = document.getElementById('inputEmail').value;
+  
+    if(email.length == 0) {
+  
+      producePrompt('*Email required','email-error', 'red');
+      //setTimeout(function(){jsHide('email-error');}, 3000);
+      return false;
+  
+    }
+    
+  
+    if(!email.match(/^[A-Za-z\._\-[0-9]*[@][A-Za-z]*[\.][a-z]{2,4}$/)) {
+  
+      producePrompt('*Invalid Email', 'email-error', 'red');
+      //setTimeout(function(){jsHide('email-error');}, 5000);
+      return false;
+  
+    }
+  
+    producePrompt('', 'email-error', 'green');
+    return true;
+  
+  }
+
+
+
+
+
+
+  function validateName () {
+  
+    var name = document.getElementById('inputName').value;
+  
+    if(name.length == 0) {
+  
+      producePrompt('*Name required','name-error', 'red');
+      //setTimeout(function(){jsHide('name-error');}, 3000);
+      return false;
+  
+    }
+    
+  
+    if(!name.match(/^[A-Za-z]*$/)) {
+  
+      producePrompt('*Only alphabets allowed', 'name-error', 'red');
+      //setTimeout(function(){jsHide('name-error');}, 5000); 
+  
+    }
+  
+    producePrompt('', 'name-error', 'green');
+    return true;
+  
+  }
+
+
+
+  function validateUsername () {
+  
+    var name = document.getElementById('username').value;
+  
+    if(name.length == 0) {
+  
+      producePrompt('*Username required','user-error', 'red');
+      //setTimeout(function(){jsHide('name-error');}, 3000);
+      return false;
+  
+    }
+  
+    producePrompt('', 'user-error', 'green');
+    return true;
+  
+  }
+
+
+  function validatePassword() {
+  
+    var password = document.getElementById('password1').value
+  
+    if(password.length == 0) {
+  
+      producePrompt('*Password required','password-error', 'red');
+      //setTimeout(function(){jsHide('password-error');}, 3000);
+      return false;
+  
+    }
+    if(password.length < 8) {
+      producePrompt('*Minimum 8 characters','password-error', 'red');
+      //setTimeout(function(){jsHide('password-error');}, 3000);
+      return false;
+    }
+  
+  
+    producePrompt('', 'password-error', 'green');
+    return true;
+  
+  }
+  function passwordVerify () {
+   var password1 = document.getElementById('password1').value;
+   var password2 = document.getElementById('password2').value;
+
+   if (!password1.match(password2))
+      producePrompt('*Passwords not matching', 'verify-error', 'red')
+      //setTimeout(function(){jsHide('verify-error');}, 3000);
+      return false;
+
+  }
+  
+  //setTimeout(function(){jsHide('incorrect');}, 3000);
+  
+  function validateForm() {
+    if (!validateEmail() || !validatePassword() || !validateName() || !validateUsername()) {
+      //jsShow('submit-error');
+      producePrompt('', 'submit-error', 'red');
+      //setTimeout(function(){jsHide('submit-error');}, 2000);
+      return false;
+    }
+    else {
+      return true
+  
+    }
+  }
+  
+  function jsShow(id) {
+    document.getElementById(id).style.display = 'block';
+  }
+  
+  function jsHide(id) {
+    document.getElementById(id).style.display = 'none';
+  }
+  
+  
+  function producePrompt(message, promptLocation, color) {
+  
+    document.getElementById(promptLocation).innerHTML = message;
+    document.getElementById(promptLocation).style.color = color;
+  
+  
+  }
+
+
+</script>
+</body>
+</html>
